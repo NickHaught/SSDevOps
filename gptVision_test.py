@@ -21,7 +21,7 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode('utf-8')
 
 # Path to your image
-image_path = "images/img_1.jpg"
+image_path = "images/Hebron_1960.jpg"
 
 # Getting the base64 string
 base64_image = encode_image(image_path)
@@ -39,7 +39,7 @@ payload = {
         "content": [
           {
             "type": "text",
-            "text": "copy down everything you see in the image"
+            "text": "Read through this document, Ignore annotations, new line characters, and vertical lines. Put the output in the format of title, body, and caption. Put everything in JSON format as output"
           },
           {
             "type": "image_url",
@@ -50,7 +50,7 @@ payload = {
         ]
       }
     ],
-    "max_tokens": 100
+    "max_tokens": 1000
 }
 
 response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
@@ -63,16 +63,7 @@ if response.status_code == 200:
     content = response_json['choices'][0]['message']['content']
 
     # Assuming the content is a string, split the content by its sections
-    sections = content.split('\n\n')
 
-    # Extracting each section
-    title = sections[0].replace('Title:', '').strip()
-    body = sections[1].replace('Body:', '').strip()
-    footer = sections[2].replace('Footer:', '').strip()
-
-    # Print the extracted parts in a nice format
-    print(f"Title:\n{title}\n")
-    print(f"Body:\n{body}\n")
-    print(f"Footer:\n{footer}\n")
+    print(f"Content:\n{content}\n")
 else:
     print("Failed to get a successful response from the API")
