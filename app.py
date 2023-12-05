@@ -106,6 +106,15 @@ def process_all():
         full_path = os.path.join(folder_path, files_listbox.get(i))
         threading.Thread(target=generate_thread, args=(full_path, result_queue), daemon=True).start()
 
+def generate_single():
+    start_loading()  # Start the loading behavior
+    selected_file = files_listbox.get(tk.ANCHOR)
+    if selected_file:
+        full_path = os.path.join(folder_path, selected_file)
+        threading.Thread(target=generate_thread, args=(full_path, result_queue), daemon=True).start()
+    else:
+        stop_loading()  # Stop loading if no file is selected
+
 # Set up the main window
 root = tk.Tk()
 root.title("Simple GUI")
@@ -130,7 +139,7 @@ files_listbox.grid(row=1, column=1, padx=padx, pady=pady, sticky="nsew")
 result_text = Text(root, height=10, wrap=tk.WORD, bg=widget_bg_color)  # Set wrap to WORD
 result_text.grid(row=0, column=0, rowspan=2, padx=padx, pady=pady, sticky="nsew")
 
-generate_button = tk.Button(root, text="Generate", command=lambda: generate_thread(os.path.join(folder_path, files_listbox.get(tk.ANCHOR)), result_queue))
+generate_button = tk.Button(root, text="Generate", command=generate_single)
 generate_button.grid(row=2, column=0, columnspan=2, padx=padx, pady=pady, sticky="ew")
 
 # Add a process all button
